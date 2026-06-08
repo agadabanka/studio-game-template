@@ -1,0 +1,22 @@
+{
+  "name": "Studio Phaser 4 Template",
+  "tagline": "Neutral Phaser 4 base on the Studio SDK",
+  "hero": "Cube",
+  "verb": "run & jump",
+  "worlds": 1,
+  "levelCount": 1,
+  "controls": "Arrows / WASD + Space",
+  "art": "procedural",
+  "music": "procedural SFX",
+  "engine": "studio-phaser4",
+  "renderer": "webgl-canvas",
+  "phaserVersion": "4.1.0",
+  "physics": "arcade",
+  "capabilities": ["particles", "filters", "tweens", "camera-follow", "deterministic-eval"],
+  "builder": "/",
+  "designLens": "/",
+  "scaffolded_from": "agadabanka/phaser-private",
+  "url": "https://studio-phaser4-demo-production.up.railway.app",
+  "gate": "0-death pass (webgl + canvas)",
+  "stages": { "scaffold": true, "identity": true, "levels": true, "gate": true, "feel": false, "hero": false, "art": false, "music": false, "deploy": true, "videos": false, "book": false, "loop": false }
+}
