@@ -14,17 +14,21 @@
 // Contracts:
 //   · NEVER auto-reload, NEVER throw, NEVER log errors (games gate on
 //     0-console-errors) — every failure path is swallowed.
-//   · Gated to humans: under the autopilot/eval harness (?auto…) this file is
-//     a no-op, so the deterministic gate never sees network jitter or toasts.
+//   · Gated to humans: under any automated harness the file is a no-op, so the
+//     deterministic gate never sees network jitter or toasts. Detection is
+//     navigator.webdriver (set by Playwright/Puppeteer — covers every game's
+//     eval, which may load plain "/?level=N" URLs without ?auto) plus the
+//     explicit ?auto flag. Tests can opt back in with UPDATE_SHELL.force.
 //   · Zero config in engine games: game id comes from window.UPDATE_SHELL,
 //     window.ANALYTICS.game, or /api/meta; hub base from UPDATE_SHELL.hub,
 //     ANALYTICS.trackUrl's origin, or the production hub default.
 (function () {
   'use strict';
   if (typeof window === 'undefined' || typeof fetch === 'undefined' || typeof document === 'undefined') return;
-  if (/[?&]auto([=&]|$)/.test(window.location.search) || window.__AUTOPILOT) return;   // human-only nicety
-
   var CFG = window.UPDATE_SHELL || {};
+  // human-only nicety: a no-op under any automated harness (navigator.webdriver
+  // covers headless evals that load plain "/?level=N" URLs) unless a test forces it on.
+  if (!CFG.force && (navigator.webdriver || /[?&]auto([=&]|$)/.test(window.location.search) || window.__AUTOPILOT)) return;
   var DEFAULT_HUB = 'https://hub-production-6d28.up.railway.app';
   var VERSION_MS = Number(CFG.versionMs) || 25000;
   var STATUS_MS = Number(CFG.statusMs) || 40000;
