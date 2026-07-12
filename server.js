@@ -17,6 +17,14 @@ const notesFile = path.join(DATA, 'notes.json');
 const notes = () => { try { return JSON.parse(fs.readFileSync(notesFile, 'utf8')); } catch { return []; } };
 
 app.get('/health', (_, res) => res.json({ ok: true, ts: Date.now() }));
+// build identity for the update-shell: the version changes on every Railway
+// deploy (commit sha), so clients can offer a "tap to update" reload instead
+// of being abruptly restarted mid-game. Boot-time fallback covers non-Railway.
+const BUILD = {
+  version: process.env.RAILWAY_GIT_COMMIT_SHA || process.env.RAILWAY_DEPLOYMENT_ID || 'boot-' + Date.now(),
+  booted_at: new Date().toISOString(),
+};
+app.get('/api/version', (_, res) => res.json({ ok: true, ...BUILD }));
 app.get('/api/meta', (_, res) => res.type('application/json').send(read('GAME_META.json', '{}')));
 app.get('/api/diary', (_, res) => res.type('text/markdown').send(read('DIARY.md', '# Diary')));
 app.get('/api/config', (_, res) => res.json({ engine: 'studio-phaser4', phaser: '4.1.0', renderer: 'webgl-canvas' }));
